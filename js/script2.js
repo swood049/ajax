@@ -2,6 +2,41 @@
 //Author: Steven Woodard (in conjunction with the class "Building Web Applications with Ajax" by Sasha Vodnik)
 //Date: 10/6/2019
 
+//fetch version
+(function(window) {
+	var url = "http://api.openweathermap.org/data/2.5/weather?q=London,England";
+	var apiKey = "cc76fc6a502260a7a187833026177ade"; // Replace "APIKEY" with your own API key; otherwise, your HTTP request will not work
+		
+	fetch(url + "&appid=" + apiKey)
+	.then(function(response){
+		if(!response.ok){
+			throw Error(response.statusText);
+		}
+		return response.json();
+	})
+	.then(function(response){
+		updateUISuccess(response);
+	})
+	.catch(function(error){
+		updateUIError();
+	})
+	function updateUIError(){
+		var weatherBox = document.querySelector("#weather");
+		weatherBox.className = "hidden";
+	}
+	function updateUISuccess(response){	
+		var condition = response.weather[0].main;
+		var degC = response.main.temp - 273.15;
+		var degCInt = Math.round(degC);
+		var degF = (degC * 1.8) + 32;
+		var degFInt = Math.round(degF);
+		var weatherBox = document.querySelector("#weather");
+		weatherBox.innerHTML = "<p>" + degCInt + "&#176;" + "/" + degFInt + "&#176;" + "</p><p>" + condition + "</p>";
+	}
+})();
+
+//xhr version
+/*
 (function(window) {
 	var url = "http://api.openweathermap.org/data/2.5/weather?q=London,England";
 	var apiKey = "cc76fc6a502260a7a187833026177ade"; // Replace "APIKEY" with your own API key; otherwise, your HTTP request will not work
@@ -44,3 +79,4 @@
 		weatherBox.className = "hidden";
 	}
 })(window);
+*/
